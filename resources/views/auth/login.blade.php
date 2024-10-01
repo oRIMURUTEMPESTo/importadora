@@ -1,63 +1,170 @@
-@extends('layouts.app')
+<?php
+session_start();
 
-@section('content')
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">{{ __('Login') }}</div>
+// Conexión a la base de datos (ajusta estos valores según tu configuración)
+$host = 'localhost';
+$dbname = 'tu_base_de_datos';
+$username = 'tu_usuario';
+$password = 'tu_contraseña';
 
-                <div class="card-body">
-                    <form method="POST" action="{{ route('login') }}">
-                        @csrf
+try {
+    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+} catch(PDOException $e) {
+    die("Error de conexión: " . $e->getMessage());
+}
 
-                        <div class="row mb-3">
-                            <label for="email" class="col-md-4 col-form-label text-md-end">{{ __('Email Address') }}</label>
+$error_message = '';
+$success_message = '';
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
+// Manejar el registro
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])) {
+    $name = $_POST['name'];
+    $email = $_POST['email'];
+    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
-                                @error('email')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+    $stmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
+    if ($stmt->execute([$name, $email, $password])) {
+        $success_message = "Usuario registrado con éxito. Por favor, inicia sesión.";
+    } else {
+        $error_message = "Error al registrar el usuario.";
+    }
+}
 
-                        <div class="row mb-3">
-                            <label for="password" class="col-md-4 col-form-label text-md-end">{{ __('Password') }}</label>
+// Manejar el inicio de sesión
+if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {
+    $email = $_POST['email'];
+    $password = $_POST['password'];
 
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control @error('password') is-invalid @enderror" name="password" required autocomplete="current-password">
+    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
+    $stmt->execute([$email]);
+    $user = $stmt->fetch();
 
-                                @error('password')
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $message }}</strong>
-                                    </span>
-                                @enderror
-                            </div>
-                        </div>
+    if ($user && password_verify($password, $user['password'])) {
+        $_SESSION['user_id'] = $user['id'];
+        $_SESSION['user_name'] = $user['name'];
+        header("Location: dashboard.php"); // Redirige a la página del dashboard
+        exit();
+    } else {
+        $error_message = "Email o contraseña incorrectos";
+    }
+}
+?>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio de Sesión Elegante y Moderno</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+        
+        :root {
+            --primary-color: #6C63FF;
+            --secondary-color: #4A45B4;
+            --background-color: #f0f2f5;
+            --text-color: #333;
+            --button-text-color: #fff;
+            --input-background: #fff;
+            --box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
 
-                        <div class="row mb-3">
-                            <div class="col-md-6 offset-md-4">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" name="remember" id="remember" {{ old('remember') ? 'checked' : '' }}>
+        .dark-mode {
+            --primary-color: #BB86FC;
+            --secondary-color: #3700B3;
+            --background-color: #121212;
+            --text-color: #E1E1E1;
+            --button-text-color: #121212;
+            --input-background: #2C2C2C;
+            --box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            transition: all 0.3s ease-in-out;
+        }
 
-                                    <label class="form-check-label" for="remember">
-                                        {{ __('Remember Me') }}
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--background-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
 
-                        <div class="row mb-0">
-                            <div class="col-md-8 offset-md-4">
-                                <button type="submit" class="btn btn-primary">
-                                    {{ __('Login') }}
-                                </button>
+        .container {
+            background-color: var(--background-color);
+            border-radius: 20px;
+            box-shadow: var(--box-shadow);
+            position: relative;
+            overflow: hidden;
+            width: 900px;
+            max-width: 100%;
+            min-height: 600px;
+        }
 
-<<<<<<< HEAD
+        .form-container {
+            position: absolute;
+            top: 0;
+            height: 100%;
+            transition: all 0.6s ease-in-out;
+        }
+
+        .sign-in-container {
+            left: 0;
+            width: 50%;
+            z-index: 2;
+        }
+
+        .sign-up-container {
+            left: 0;
+            width: 50%;
+            opacity: 0;
+            z-index: 1;
+        }
+
+        .container.right-panel-active .sign-in-container {
+            transform: translateX(100%);
+        }
+
+        .container.right-panel-active .sign-up-container {
+            transform: translateX(100%);
+            opacity: 1;
+            z-index: 5;
+            animation: show 0.6s;
+        }
+
+        @keyframes show {
+            0%, 49.99% {
+                opacity: 0;
+                z-index: 1;
+            }
+            
+            50%, 100% {
+                opacity: 1;
+                z-index: 5;
+            }
+        }
+
+        .overlay-container {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: 50%;
+            height: 100%;
+            overflow: hidden;
+            transition: transform 0.6s ease-in-out;
+            z-index: 100;
+        }
+
+        .container.right-panel-active .overlay-container{
+            transform: translateX(-100%);
+        }
+
         .overlay {
             background: var(--primary-color);
             background: linear-gradient(45deg, var(--primary-color) 0%, var(--secondary-color) 100%);
@@ -228,13 +335,39 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
+
+        .message {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: #fff;
+            font-weight: bold;
+            z-index: 1000;
+        }
+
+        .error-message {
+            background-color: #ff4444;
+        }
+
+        .success-message {
+            background-color: #00C851;
+        }
     </style>
 </head>
 <body>
     <button id="theme-toggle">Cambiar Tema</button>
+    <?php if (!empty($error_message)): ?>
+        <div class="message error-message"><?php echo $error_message; ?></div>
+    <?php endif; ?>
+    <?php if (!empty($success_message)): ?>
+        <div class="message success-message"><?php echo $success_message; ?></div>
+    <?php endif; ?>
     <div class="container" id="container">
         <div class="form-container sign-up-container">
-            <form>
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                 <h1>Crear Cuenta</h1>
                 <div class="social-container">
                     <a href="#" aria-label="Registrarse con Facebook"><img src="https://cdn.icon-icons.com/icons2/3398/PNG/512/circle_facebook_logo_icon_214753.png" alt="Facebook" /></a>
@@ -242,14 +375,14 @@
                     <a href="#" aria-label="Registrarse con LinkedIn"><img src="https://static.vecteezy.com/system/resources/previews/023/986/970/original/linkedin-logo-linkedin-logo-transparent-linkedin-icon-transparent-free-free-png.png" alt="LinkedIn" /></a>
                 </div>
                 <span>o usa tu correo para registrarte</span>
-                <input type="text" placeholder="Nombre" />
-                <input type="email" placeholder="Email" />
-                <input type="password" placeholder="Contraseña" />
-                <button>Registrarse </button>
+                <input type="text" name="name" placeholder="Nombre" required />
+                <input type="email" name="email" placeholder="Email" required />
+                <input type="password" name="password" placeholder="Contraseña" required />
+                <button type="submit" name="signup">Registrarse</button>
             </form>
         </div>
         <div class="form-container sign-in-container">
-            <form>
+            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
                 <h1>Iniciar Sesión</h1>
                 <div class="social-container">
                     <a href="#" aria-label="Iniciar sesión con Facebook"><img src="https://cdn.icon-icons.com/icons2/3398/PNG/512/circle_facebook_logo_icon_214753.png" alt="Facebook" /></a>
@@ -257,11 +390,10 @@
                     <a href="#" aria-label="Iniciar sesión con LinkedIn"><img src="https://static.vecteezy.com/system/resources/previews/023/986/970/original/linkedin-logo-linkedin-logo-transparent-linkedin-icon-transparent-free-free-png.png" alt="LinkedIn" /></a>
                 </div>
                 <span>o usa tu cuenta</span>
-                <input type="text" placeholder="Nombre" />
-                <input type="email" placeholder="Email" />
-                <input type="password" placeholder="Contraseña" />
+                <input type="email" name="email" placeholder="Email" required />
+                <input type="password" name="password" placeholder="Contraseña" required />
                 <a href="#">¿Olvidaste tu contraseña?</a>
-                <button><a href="#">Iniciar Sesión<</a>/button>
+                <button type="submit" name="signin">Iniciar Sesión</button>
             </form>
         </div>
         <div class="overlay-container">
@@ -274,20 +406,40 @@
                 <div class="overlay-panel overlay-right">
                     <h1>¡Hola, Amigo!</h1>
                     <p>Ingresa tus datos y comienza un viaje con nosotros</p>
-                    <button class="ghost" id="signUp"><a href="#"> Registrarse</a></button>
-=======
-                                @if (Route::has('password.request'))
-                                    <a class="btn btn-link" href="{{ route('password.request') }}">
-                                        {{ __('Forgot Your Password?') }}
-                                    </a>
-                                @endif
-                            </div>
-                        </div>
-                    </form>
->>>>>>> 15a316ed3b642a1e9888760108a2de72bb0cff74
+                    <button class="ghost" id="signUp">Registrarse</button>
                 </div>
             </div>
         </div>
     </div>
-</div>
-@endsection
+
+    <script>
+        const container = document.getElementById('container');
+        const signUpButton = document.getElementById('signUp');
+        const signInButton = document.getElementById('signIn');
+        const themeToggle = document.getElementById('theme-toggle');
+        let darkMode = false;
+
+        signUpButton.addEventListener('click', () => {
+            container.classList.add('right-panel-active');
+        });
+
+        signInButton.addEventListener('click', () => {
+            container.classList.remove('right-panel-active');
+        });
+
+        themeToggle.addEventListener('click', () => {
+            darkMode = !darkMode;
+            document.body.classList.toggle('dark-mode', darkMode);
+            themeToggle.textContent = darkMode ? 'Modo Claro' : 'Modo Oscuro';
+        });
+
+        // Ocultar mensajes de error y éxito después de 5 segundos
+        setTimeout(() => {
+            const messages = document.querySelectorAll('.message');
+            messages.forEach(msg => {
+                msg.style.display = 'none';
+            });
+        }, 5000);
+    </script>
+</body>
+</html>
