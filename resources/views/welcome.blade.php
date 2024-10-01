@@ -36,6 +36,24 @@
                             VENTAS
                         </a>
                     </li>
+                    <li class="mb-6">
+                        <a href="#" class="flex items-center text-gray-300 hover:text-white px-4 py-2">
+                            <img src="icon-ventas.png" alt="Ventas" class="h-6 w-6 mr-3">
+                            COMPRAS
+                        </a>
+                    </li>
+                    <li class="mb-6">
+                        <a href="#" class="flex items-center text-gray-300 hover:text-white px-4 py-2">
+                            <img src="icon-ventas.png" alt="Ventas" class="h-6 w-6 mr-3">
+                            PRESTAMOS
+                        </a>
+                    </li>
+                    <li class="mb-6">
+                        <a href="#" class="flex items-center text-gray-300 hover:text-white px-4 py-2">
+                            <img src="icon-ventas.png" alt="Ventas" class="h-6 w-6 mr-3">
+                            HISTORIAL
+                        </a>
+                    </li>
                 </ul>
             </nav>
         </aside>
