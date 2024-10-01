@@ -159,7 +159,7 @@ return [
         /*
          * Package Service Providers...
          */
-
+        Livewire\LivewireServiceProvider::class, // Agrega esta línea
         /*
          * Application Service Providers...
          */
