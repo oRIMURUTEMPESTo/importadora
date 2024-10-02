@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Categoria;
+use App\Models\categorias;
 use Illuminate\Http\Request;
 
 class categoriasController extends Controller
@@ -12,7 +12,7 @@ class categoriasController extends Controller
      */
     public function index()
     {
-        $categorias = categoria::all();
+        $categorias = categorias::all();
         return view('categorias.index', compact('categorias'));
     }
 
@@ -36,7 +36,7 @@ class categoriasController extends Controller
             'estado' => 'required|boolean',
         ]);
 
-        categoria::create($request->all());
+        categorias::create($request->all());
         return redirect()->route('categorias.index');
     }
 
@@ -45,7 +45,7 @@ class categoriasController extends Controller
      */
     public function show($id)
     {
-        $categoria = categoria::findOrFail($id);
+        $categoria = categorias::findOrFail($id);
         return view('categorias.show', compact('categoria'));
     }
 
@@ -54,7 +54,7 @@ class categoriasController extends Controller
      */
     public function edit($id)
     {
-        $categoria = categoria::findOrFail($id);
+        $categoria = categorias::findOrFail($id);
         return view('categorias.edit', compact('categoria'));
     }
 
@@ -70,7 +70,7 @@ class categoriasController extends Controller
             'estado' => 'required|boolean',
         ]);
 
-        $categoria = categoria::findOrFail($id);
+        $categoria = categorias::findOrFail($id);
         $categoria->update($request->all());
         return redirect()->route('categorias.index');
     }
@@ -80,7 +80,7 @@ class categoriasController extends Controller
      */
     public function destroy($id)
     {
-        $categoria = categoria::findOrFail($id);
+        $categoria = categorias::findOrFail($id);
         $categoria->delete();
         return redirect()->route('categorias.index');
     }
