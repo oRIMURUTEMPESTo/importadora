@@ -5,6 +5,9 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
 use App\Http\Controllers\categoriasController;
+use App\Http\Controllers\ClienteController; // Asegúrate de que la línea esté presente
+use App\Http\Controllers\ProveedorController; // Asegúrate de que la línea esté presente
+
 
 
 /*

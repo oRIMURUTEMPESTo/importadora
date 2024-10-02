@@ -304,7 +304,8 @@
             </form>
         </div>
         <div class="form-container sign-in-container">
-            <form>
+            <form method="POST" action="{{ route('login') }}">
+            @csrf
                 <h1>Iniciar Sesión</h1>
                 <div class="social-container">
                     <a href="#" aria-label="Iniciar sesión con Facebook"><img src="https://cdn.icon-icons.com/icons2/3398/PNG/512/circle_facebook_logo_icon_214753.png" alt="Facebook" /></a>
@@ -312,11 +313,10 @@
                     <a href="#" aria-label="Iniciar sesión con LinkedIn"><img src="https://static.vecteezy.com/system/resources/previews/023/986/970/original/linkedin-logo-linkedin-logo-transparent-linkedin-icon-transparent-free-free-png.png" alt="LinkedIn" /></a>
                 </div>
                 <span>o usa tu cuenta</span>
-                <input type="text" placeholder="Nombre" />
-                <input type="email" placeholder="Email" />
-                <input type="password" placeholder="Contraseña" />
+                <input type="email" name="email" placeholder="Email" required />
+                <input type="password" name="password" placeholder="Contraseña" required />
                 <a href="#">¿Olvidaste tu contraseña?</a>
-                <button>Iniciar Sesión</button>
+                <button type="submit">Iniciar Sesión</button>
             </form>
         </div>
         <div class="overlay-container">
