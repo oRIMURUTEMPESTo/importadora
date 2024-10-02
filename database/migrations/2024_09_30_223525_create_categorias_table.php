@@ -13,7 +13,7 @@ class CreateCategoriasTable extends Migration
             $table->string('nombre');
             $table->text('descripcion')->nullable();
             $table->foreignId('id_creador')
-                ->constrained('usuarios', 'id_usuario')  // Usuario que creó la categoría
+                ->constrained('users', 'id')  // Cambiar 'usuarios' a 'users'
                 ->onDelete('cascade');  // Eliminar categoría si se elimina el usuario
             $table->boolean('estado')->default(1);  // Estado de la categoría
             $table->timestamps();  // Incluye created_at y updated_at

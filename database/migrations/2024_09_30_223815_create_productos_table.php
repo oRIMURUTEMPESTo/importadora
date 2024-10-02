@@ -20,9 +20,9 @@ class CreateProductosTable extends Migration
             $table->decimal('costo', 10, 2);  // Costo del producto
             $table->boolean('estado')->default(1);  // Estado del producto
 
-            // Relación con la tabla usuarios
+            // Relación con la tabla users
             $table->foreignId('id_creador')
-                ->constrained('usuarios', 'id_usuario')  
+                ->constrained('users', 'id')  // Cambiar 'usuarios' a 'users'
                 ->onDelete('cascade'); 
 
             // Relación con compras y ventas
