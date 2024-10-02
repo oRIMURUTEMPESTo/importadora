@@ -1,55 +1,3 @@
-<?php
-session_start();
-
-// Conexión a la base de datos (ajusta estos valores según tu configuración)
-$host = 'localhost';
-$dbname = 'tu_base_de_datos';
-$username = 'tu_usuario';
-$password = 'tu_contraseña';
-
-try {
-    $pdo = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch(PDOException $e) {
-    die("Error de conexión: " . $e->getMessage());
-}
-
-$error_message = '';
-$success_message = '';
-
-// Manejar el registro
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signup'])) {
-    $name = $_POST['name'];
-    $email = $_POST['email'];
-    $password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-
-    $stmt = $pdo->prepare("INSERT INTO users (name, email, password) VALUES (?, ?, ?)");
-    if ($stmt->execute([$name, $email, $password])) {
-        $success_message = "Usuario registrado con éxito. Por favor, inicia sesión.";
-    } else {
-        $error_message = "Error al registrar el usuario.";
-    }
-}
-
-// Manejar el inicio de sesión
-if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {
-    $email = $_POST['email'];
-    $password = $_POST['password'];
-
-    $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-    $stmt->execute([$email]);
-    $user = $stmt->fetch();
-
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['user_name'] = $user['name'];
-        header("Location: dashboard.php"); // Redirige a la página del dashboard
-        exit();
-    } else {
-        $error_message = "Email o contraseña incorrectos";
-    }
-}
-?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -335,39 +283,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(0,0,0,0.2);
         }
-
-        .message {
-            position: fixed;
-            top: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            padding: 10px 20px;
-            border-radius: 5px;
-            color: #fff;
-            font-weight: bold;
-            z-index: 1000;
-        }
-
-        .error-message {
-            background-color: #ff4444;
-        }
-
-        .success-message {
-            background-color: #00C851;
-        }
     </style>
 </head>
 <body>
     <button id="theme-toggle">Cambiar Tema</button>
-    <?php if (!empty($error_message)): ?>
-        <div class="message error-message"><?php echo $error_message; ?></div>
-    <?php endif; ?>
-    <?php if (!empty($success_message)): ?>
-        <div class="message success-message"><?php echo $success_message; ?></div>
-    <?php endif; ?>
     <div class="container" id="container">
         <div class="form-container sign-up-container">
-            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+            <form>
                 <h1>Crear Cuenta</h1>
                 <div class="social-container">
                     <a href="#" aria-label="Registrarse con Facebook"><img src="https://cdn.icon-icons.com/icons2/3398/PNG/512/circle_facebook_logo_icon_214753.png" alt="Facebook" /></a>
@@ -375,14 +297,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {
                     <a href="#" aria-label="Registrarse con LinkedIn"><img src="https://static.vecteezy.com/system/resources/previews/023/986/970/original/linkedin-logo-linkedin-logo-transparent-linkedin-icon-transparent-free-free-png.png" alt="LinkedIn" /></a>
                 </div>
                 <span>o usa tu correo para registrarte</span>
-                <input type="text" name="name" placeholder="Nombre" required />
-                <input type="email" name="email" placeholder="Email" required />
-                <input type="password" name="password" placeholder="Contraseña" required />
-                <button type="submit" name="signup">Registrarse</button>
+                <input type="text" placeholder="Nombre" />
+                <input type="email" placeholder="Email" />
+                <input type="password" placeholder="Contraseña" />
+                <button>Registrarse</button>
             </form>
         </div>
         <div class="form-container sign-in-container">
-            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+            <form>
                 <h1>Iniciar Sesión</h1>
                 <div class="social-container">
                     <a href="#" aria-label="Iniciar sesión con Facebook"><img src="https://cdn.icon-icons.com/icons2/3398/PNG/512/circle_facebook_logo_icon_214753.png" alt="Facebook" /></a>
@@ -390,10 +312,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {
                     <a href="#" aria-label="Iniciar sesión con LinkedIn"><img src="https://static.vecteezy.com/system/resources/previews/023/986/970/original/linkedin-logo-linkedin-logo-transparent-linkedin-icon-transparent-free-free-png.png" alt="LinkedIn" /></a>
                 </div>
                 <span>o usa tu cuenta</span>
-                <input type="email" name="email" placeholder="Email" required />
-                <input type="password" name="password" placeholder="Contraseña" required />
+                <input type="text" placeholder="Nombre" />
+                <input type="email" placeholder="Email" />
+                <input type="password" placeholder="Contraseña" />
                 <a href="#">¿Olvidaste tu contraseña?</a>
-                <button type="submit" name="signin">Iniciar Sesión</button>
+                <button>Iniciar Sesión</button>
             </form>
         </div>
         <div class="overlay-container">
@@ -419,27 +342,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST' && isset($_POST['signin'])) {
         const themeToggle = document.getElementById('theme-toggle');
         let darkMode = false;
 
-        signUpButton.addEventListener('click', () => {
-            container.classList.add('right-panel-active');
-        });
-
-        signInButton.addEventListener('click', () => {
-            container.classList.remove('right-panel-active');
-        });
+        signUpButton.addEventListener('click', () => container.classList.add('right-panel-active'));
+        signInButton.addEventListener('click', () => container.classList.remove('right-panel-active'));
 
         themeToggle.addEventListener('click', () => {
             darkMode = !darkMode;
             document.body.classList.toggle('dark-mode', darkMode);
             themeToggle.textContent = darkMode ? 'Modo Claro' : 'Modo Oscuro';
         });
-
-        // Ocultar mensajes de error y éxito después de 5 segundos
-        setTimeout(() => {
-            const messages = document.querySelectorAll('.message');
-            messages.forEach(msg => {
-                msg.style.display = 'none';
-            });
-        }, 5000);
     </script>
 </body>
 </html>
