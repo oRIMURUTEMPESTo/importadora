@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\VerificationController;
+use App\Http\Controllers\categoriasController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -38,3 +40,6 @@ Route::post('register', [RegisterController::class, 'register']);
 Route::get('email/verify', [VerificationController::class, 'show'])->name('verification.notice');
 Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
+//ruta categoria
+
+Route::resource('categorias', categoriasController::class);
