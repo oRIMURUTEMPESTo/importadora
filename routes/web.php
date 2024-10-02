@@ -41,5 +41,6 @@ Route::get('email/verify', [VerificationController::class, 'show'])->name('verif
 Route::get('email/verify/{id}/{hash}', [VerificationController::class, 'verify'])->name('verification.verify');
 Route::post('email/resend', [VerificationController::class, 'resend'])->name('verification.resend');
 //ruta categoria
-
+Route::resource('clientes', ClienteController::class);
+Route::resource('proveedores', ProveedorController::class);
 Route::resource('categorias', categoriasController::class);
