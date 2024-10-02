@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TechStore</title>
     <script src="https://cdn.tailwindcss.com"></script> <!-- Importa Tailwind CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet"> <!-- Importa Font Awesome -->
 </head>
 <body class="bg-gray-100 font-sans antialiased">
     <!-- Contenedor principal -->
@@ -20,37 +21,37 @@
                 <ul>
                     <li class="mb-6">
                         <a href="#" class="flex items-center text-gray-300 hover:text-white px-4 py-2">
-                            <img src="icon-category.png" alt="Categorías" class="h-6 w-6 mr-3">
+                            <i class="fas fa-boxes-stacked fa-lg mr-3"></i> <!-- Ícono de Categorías -->
                             CATEGORÍAS
                         </a>
                     </li>
                     <li class="mb-6">
                         <a href="#" class="flex items-center text-gray-300 hover:text-white px-4 py-2">
-                            <img src="icon-productos.png" alt="Productos" class="h-6 w-6 mr-3">
+                            <i class="fas fa-laptop fa-lg mr-3"></i> <!-- Ícono de Productos -->
                             PRODUCTOS
                         </a>
                     </li>
                     <li class="mb-6">
                         <a href="#" class="flex items-center text-gray-300 hover:text-white px-4 py-2">
-                            <img src="icon-ventas.png" alt="Ventas" class="h-6 w-6 mr-3">
+                            <i class="fas fa-shopping-cart fa-lg mr-3"></i> <!-- Ícono de Ventas -->
                             VENTAS
                         </a>
                     </li>
                     <li class="mb-6">
                         <a href="#" class="flex items-center text-gray-300 hover:text-white px-4 py-2">
-                            <img src="icon-ventas.png" alt="Ventas" class="h-6 w-6 mr-3">
+                            <i class="fas fa-money-check-alt fa-lg mr-3"></i> <!-- Ícono de Compras -->
                             COMPRAS
                         </a>
                     </li>
                     <li class="mb-6">
                         <a href="#" class="flex items-center text-gray-300 hover:text-white px-4 py-2">
-                            <img src="icon-ventas.png" alt="Ventas" class="h-6 w-6 mr-3">
+                            <i class="fas fa-exchange-alt fa-lg mr-3"></i> <!-- Ícono de Préstamos -->
                             PRESTAMOS
                         </a>
                     </li>
                     <li class="mb-6">
                         <a href="#" class="flex items-center text-gray-300 hover:text-white px-4 py-2">
-                            <img src="icon-ventas.png" alt="Ventas" class="h-6 w-6 mr-3">
+                            <i class="fas fa-history fa-lg mr-3"></i> <!-- Ícono de Historial -->
                             HISTORIAL
                         </a>
                     </li>
@@ -65,8 +66,13 @@
                 <h2 class="text-lg font-semibold">Categorías | Listado</h2>
                 <div class="flex items-center">
                     <input type="text" placeholder="Buscar..." class="border p-2 rounded mr-2">
-                    <button class="bg-gray-800 text-white p-2 rounded">Agregar</button>
-                    <img src="icon-user.png" alt="Perfil" class="ml-4 h-8 w-8 rounded-full">
+                    <button class="bg-gray-800 text-white p-2 rounded flex items-center">
+                        <i class="fas fa-search mr-2"></i> Buscar
+                    </button>
+                    <button class="bg-gray-800 text-white p-2 rounded flex items-center ml-2">
+                        <i class="fas fa-plus mr-2"></i> Agregar
+                    </button>
+                    <i class="fas fa-user-circle fa-2x ml-4"></i>
                 </div>
             </header>
 
@@ -88,10 +94,10 @@
                             </td>
                             <td class="py-2 px-4 flex">
                                 <button class="bg-blue-500 text-white p-2 rounded mr-2 flex items-center">
-                                    <img src="icon-edit.png" alt="Editar" class="h-4 w-4 mr-1"> Editar
+                                    <i class="fas fa-edit mr-2"></i> Editar
                                 </button>
                                 <button class="bg-red-500 text-white p-2 rounded flex items-center">
-                                    <img src="icon-delete.png" alt="Eliminar" class="h-4 w-4 mr-1"> Eliminar
+                                    <i class="fas fa-trash-alt mr-2"></i> Eliminar
                                 </button>
                             </td>
                         </tr>
