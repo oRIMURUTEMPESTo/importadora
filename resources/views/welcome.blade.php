@@ -20,7 +20,7 @@
             <nav class="flex-grow mt-10">
                 <ul>
                     <li class="mb-6">
-                        <a href="#" class="flex items-center text-gray-300 hover:text-white px-4 py-2">
+                        <a href="{{ route('categorias.index') }}" class="flex items-center text-gray-300 hover:text-white px-4 py-2">
                             <i class="fas fa-boxes-stacked fa-lg mr-3"></i> <!-- Ícono de Categorías -->
                             CATEGORÍAS
                         </a>
